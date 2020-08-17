@@ -4,13 +4,19 @@ from lib.feature import feature
 import kanji
 from lib.database import get_db
 
-@feature("^(\d+)? ?kanjis?$")
+@feature("^(\d+)? ?kanjis? *(N[12345])?$")
 async def random_kanji(sourceMessage, matchResult):
     with sourceMessage.channel.typing():
 
         count = 1 if matchResult.group(1) is None else int(matchResult.group(1))
 
-        random_kanji_list = get_db().kanji.aggregate([{ "$sample": { "size": count } }])
+        if matchResult.group(2):
+            random_kanji_list = get_db().kanji.aggregate([
+                {"$match":  { "level-jlpt": matchResult.group(2) }},
+                {"$sample": { "size": count }}
+            ])
+        else:
+            random_kanji_list = get_db().kanji.aggregate([{ "$sample": { "size": count } }])
 
         for kanji_rand in random_kanji_list:
             await kanji.send_kanji_details(kanji_rand["kanji"], sourceMessage.channel)

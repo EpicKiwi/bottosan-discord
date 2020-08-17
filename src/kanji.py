@@ -36,8 +36,6 @@ async def send_kanji_details(kanji, channel, text=""):
 
     details.set_footer(text="JLPT-Go")
 
-    print(details.to_dict())
-
     await channel.send(text, embed=details)
 
 def get_kanji_thumbnail(kanji):
@@ -48,7 +46,7 @@ def get_kanji_thumbnail(kanji):
         canvas = cairo.ImageSurface(cairo.FORMAT_ARGB32, 512,512)
         ctx = cairo.Context(canvas)
         ctx.scale(512,512)
-        ctx.set_source_rgb(0.13, 0.15, 0.16)
+        ctx.set_source_rgb(0.184, 0.192, 0.211)
         ctx.rectangle(0,0,1,1)
         ctx.fill()
         ctx.set_source_rgb(1, 1, 1)
